@@ -4,4 +4,7 @@ export interface UserProps {
   bio?: string;
   name: string;
   email?: string;
+  followers?: number;
+  following?: number;
+  location?: string;
 }

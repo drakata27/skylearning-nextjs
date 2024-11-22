@@ -73,7 +73,12 @@ export default function Navbar() {
               <button>
                 <PlusSquare />
               </button>
-              <ProfileImage src={user.avatar_url} id={user.id} />
+              <ProfileImage
+                id={user.id}
+                name={user.name}
+                bio={user.bio}
+                avatar_url={user.avatar_url}
+              />
               <Button onClick={signOut}>Sign Out</Button>
             </div>
           ) : (
@@ -101,7 +106,12 @@ export default function Navbar() {
               <button>
                 <PlusSquare />
               </button>
-              <ProfileImage src={user.avatar_url} id={user.id} />
+              <ProfileImage
+                id={user.id}
+                name={user.name}
+                bio={user.bio}
+                avatar_url={user.avatar_url}
+              />
               <Button onClick={signOut}>Sign Out</Button>
             </div>
           ) : (

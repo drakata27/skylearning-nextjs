@@ -26,7 +26,12 @@ const SectionItem = ({ title, subtitle, user, id }: SectionItemProps) => {
           <CardDescription>{subtitle}</CardDescription>
         </CardHeader>
         <CardFooter className="space-x-3">
-          <ProfileImage src={user?.avatar_url} id={user.id} />
+          <ProfileImage
+            id={user.id}
+            name={user.name}
+            bio={user.bio}
+            avatar_url={user.avatar_url}
+          />
           <p>By {user.name}</p>
         </CardFooter>
       </Card>
