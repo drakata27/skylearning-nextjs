@@ -3,12 +3,17 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { Brain, Menu } from "lucide-react";
+import { Brain, Menu, PlusSquare } from "lucide-react";
 import { ModeToggle } from "./ModeToggle";
+import BASE_URL from "../lib/config";
+import { UserProps } from "@/types/user";
+import axios from "axios";
+import ProfileImage from "./ProfileImage";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [user, setUser] = useState<UserProps>();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,6 +30,23 @@ export default function Navbar() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/user`, {
+        withCredentials: true,
+      })
+      .then((res) => setUser(res.data))
+      .catch((error) => console.log("Error: ", error));
+  }, []);
+
+  const signOut = () => {
+    window.location.href = `${BASE_URL}/oauth/logout`;
+  };
+
+  const logIn = () => {
+    window.location.href = `${BASE_URL}`;
+  };
 
   return (
     <header
@@ -46,10 +68,17 @@ export default function Navbar() {
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-4">
           <ModeToggle />
-          {/* TODO: Create env variables for url */}
-          <Link href="http://localhost:8080">
-            <Button>Log In</Button>
-          </Link>
+          {user ? (
+            <div className="flex space-x-5">
+              <button>
+                <PlusSquare />
+              </button>
+              <ProfileImage src={user.avatar_url} id={user.id} />
+              <Button onClick={signOut}>Sign Out</Button>
+            </div>
+          ) : (
+            <Button onClick={logIn}>Log In</Button>
+          )}
         </div>
 
         {/* Hamburger Menu */}
@@ -66,10 +95,18 @@ export default function Navbar() {
       {menuOpen && (
         <div className="md:hidden flex flex-col items-center gap-2 mt-3  p-4 rounded shadow">
           <ModeToggle />
-          {/* // TODO: Create env variables for url */}
-          <Link href="http://localhost:8080">
-            <Button>Log In</Button>
-          </Link>
+
+          {user ? (
+            <div className="flex flex-col items-center space-y-5">
+              <button>
+                <PlusSquare />
+              </button>
+              <ProfileImage src={user.avatar_url} id={user.id} />
+              <Button onClick={signOut}>Sign Out</Button>
+            </div>
+          ) : (
+            <Button onClick={logIn}>Log In</Button>
+          )}
         </div>
       )}
     </header>

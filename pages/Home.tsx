@@ -3,34 +3,27 @@
 import SectionItem from "@/components/SectionItem";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import BASE_URL from "../lib/config";
+import { UserProps } from "@/types/user";
 
-// TODO: Put interfaces in file
 interface SectionProps {
+  id: number;
   title: string;
   subtitle: string;
 }
 
-interface UserProps {
-  avatar_url?: string;
-  bio: string;
-  name: string;
-  email: string;
-}
-
 const HomePage = () => {
   const [user, setUser] = useState<UserProps>({
+    id: 0,
     avatar_url: "",
     name: "",
-    email: "hidden",
-    bio: "",
   });
 
   const [sections, setSections] = useState<SectionProps[]>([]);
 
   useEffect(() => {
     axios
-      // TODO: Create env variables for url
-      .get("http://localhost:8080/user", {
+      .get(`${BASE_URL}/user`, {
         withCredentials: true,
       })
       .then((res) => setUser(res.data))
@@ -39,8 +32,7 @@ const HomePage = () => {
 
   useEffect(() => {
     axios
-      // TODO: Create env variables for url
-      .get("http://localhost:8080/section", {
+      .get(`${BASE_URL}/section`, {
         withCredentials: true,
       })
       .then((res) => setSections(res.data))
@@ -55,7 +47,8 @@ const HomePage = () => {
           key={id}
           title={section.title}
           subtitle={section.subtitle}
-          user={user.name}
+          user={user}
+          id={section.id}
         />
       ))}
     </div>
