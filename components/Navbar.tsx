@@ -46,7 +46,8 @@ export default function Navbar() {
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-4">
           <ModeToggle />
-          <Link href="https://blog.aleksdraka.online" target="blank">
+          {/* TODO: Create env variables for url */}
+          <Link href="http://localhost:8080">
             <Button>Log In</Button>
           </Link>
         </div>
@@ -65,7 +66,8 @@ export default function Navbar() {
       {menuOpen && (
         <div className="md:hidden flex flex-col items-center gap-2 mt-3  p-4 rounded shadow">
           <ModeToggle />
-          <Link href="https://blog.aleksdraka.online" target="blank">
+          {/* // TODO: Create env variables for url */}
+          <Link href="http://localhost:8080">
             <Button>Log In</Button>
           </Link>
         </div>

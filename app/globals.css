@@ -69,4 +69,7 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  .heading {
+    @apply text-xl font-bold;
+  }
 }
