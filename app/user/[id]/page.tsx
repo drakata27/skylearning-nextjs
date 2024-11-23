@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react";
 const Profile = () => {
   const [user, setUser] = useState<UserProps>({
     id: 0,
+    sub: 0,
     avatar_url: "",
     name: "",
   });
@@ -29,19 +30,7 @@ const Profile = () => {
   return (
     <div className="container">
       <h1 className="heading">Profile</h1>
-      {isLoading ? (
-        <SkeletonCard />
-      ) : (
-        <UserInfo
-          id={user.id}
-          name={user.name}
-          avatar_url={user.avatar_url}
-          bio={user.bio}
-          followers={user.followers}
-          following={user.following}
-          location={user.location}
-        />
-      )}
+      {isLoading ? <SkeletonCard /> : <UserInfo user={user!} />}
     </div>
   );
 };

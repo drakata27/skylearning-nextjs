@@ -9,29 +9,24 @@ import {
 import { UserProps } from "@/types/user";
 import ProfileImage from "./ProfileImage";
 import Link from "next/link";
+import { SectionProps } from "@/types/section";
 
-interface SectionItemProps {
-  title: string;
-  subtitle: string;
+const SectionItem = ({
+  section,
+  user,
+}: {
+  section: SectionProps;
   user: UserProps;
-  id: number;
-}
-
-const SectionItem = ({ title, subtitle, user, id }: SectionItemProps) => {
+}) => {
   return (
-    <Link href={`/${id}`}>
+    <Link href={`/section/${section.id}`}>
       <Card className="mt-3 mb-4">
         <CardHeader>
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{subtitle}</CardDescription>
+          <CardTitle>{section.title}</CardTitle>
+          <CardDescription>{section.subtitle}</CardDescription>
         </CardHeader>
         <CardFooter className="space-x-3">
-          <ProfileImage
-            id={user.id}
-            name={user.name}
-            bio={user.bio}
-            avatar_url={user.avatar_url}
-          />
+          <ProfileImage user={user} />
           <p>By {user.name}</p>
         </CardFooter>
       </Card>

@@ -9,21 +9,16 @@ import { UserProps } from "@/types/user";
 import { PinIcon, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
-const UserInfo = ({
-  name,
-  avatar_url,
-  bio,
-  followers,
-  following,
-  location,
-}: UserProps) => {
+const UserInfo = ({ user }: { user: UserProps }) => {
   return (
     <Card className="ml-[20px] mr-[20px] sm:ml-[30px] sm:mr-[30px] md:ml-[100px] md:mr-[100px] lg:ml-[200px] lg:mr-[200px] xl:ml-[300px] xl:mr-[300px]">
       <CardHeader>
         <CardTitle className="flex mb-5 ">
           <div className="flex-1">
             <Avatar className="size-20 border mr-4">
-              <AvatarImage src={avatar_url} />
+              <AvatarImage
+                src={user.avatar_url ? user.avatar_url : user.picture}
+              />
               <AvatarFallback>
                 <User className="mt-2" />
               </AvatarFallback>
@@ -31,26 +26,38 @@ const UserInfo = ({
           </div>
 
           <div className="space-y-5 flex-1 items-">
-            <h2>{name}</h2>
-            <div className="flex  space-x-5">
-              <div className="flex-col space-y-2">
-                <p className="text-center font-normal">Followers</p>
-                <p className="text-center text-sm text-gray-400">{followers}</p>
-              </div>
+            <h2>{user.name}</h2>
+            <h2 className="font-normal">
+              Email: {user.email ? user.email : "Hidden"}
+            </h2>
 
-              <div className="flex-col space-y-2">
-                <p className="text-center font-normal">Following</p>
-                <p className="text-center text-sm text-gray-400">{following}</p>
+            {user.followers ? (
+              <div className="flex  space-x-5">
+                <div className="flex-col space-y-2">
+                  <p className="text-center font-normal">Followers</p>
+                  <p className="text-center text-sm text-gray-400">
+                    {user.followers}
+                  </p>
+                </div>
+
+                <div className="flex-col space-y-2">
+                  <p className="text-center font-normal">Following</p>
+                  <p className="text-center text-sm text-gray-400">
+                    {user.following}
+                  </p>
+                </div>
               </div>
-            </div>
+            ) : (
+              <></>
+            )}
           </div>
         </CardTitle>
-        <CardDescription>{bio}</CardDescription>
+        <CardDescription>{user.bio ? user.bio : "No Bio"}</CardDescription>
       </CardHeader>
       <CardFooter>
         <p className="flex">
           <PinIcon />
-          {location}
+          {user.location ? user.location : "No location specified"}
         </p>
       </CardFooter>
     </Card>
