@@ -10,7 +10,11 @@ import axios from "axios";
 import BASE_URL from "@/lib/config";
 
 const SectionForm = () => {
-  const [section, setSection] = useState<SectionProps>();
+  const [section, setSection] = useState<SectionProps>({
+    id: 0,
+    title: "",
+    subtitle: "",
+  });
   const [user, setUser] = useState<UserProps>({
     id: 0,
     sub: 0,
@@ -31,8 +35,9 @@ const SectionForm = () => {
     const sectionData = {
       title: section?.title || "",
       subtitle: section?.subtitle || "",
-      owner: user.id ? user.id : user.sub,
+      // owner: user.id ? user.id : user.sub,
     };
+    console.log("Sending section data:", sectionData);
 
     axios
       .post(`${BASE_URL}/section`, sectionData)
@@ -45,7 +50,8 @@ const SectionForm = () => {
     setSection({ ...section, [name]: value });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     try {
       createSection();
     } catch (e) {
@@ -59,12 +65,14 @@ const SectionForm = () => {
       className="rounded-xl border mt-5 space-y-4 p-5"
     >
       <Input
-        value={section?.title}
+        name="title"
+        value={section.title}
         onChange={handleInputChange}
         placeholder="Add title..."
       />
       <Input
-        value={section?.subtitle}
+        name="subtitle"
+        value={section.subtitle}
         onChange={handleInputChange}
         placeholder="Add subtitle..."
       />
