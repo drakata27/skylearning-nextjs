@@ -51,7 +51,7 @@ const SectionForm = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     try {
       createSection();
     } catch (e) {
