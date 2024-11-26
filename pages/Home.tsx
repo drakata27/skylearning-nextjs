@@ -21,7 +21,6 @@ const HomePage = () => {
           axios.get(`${BASE_URL}/user`, { withCredentials: true }),
           axios.get(`${BASE_URL}/section`, { withCredentials: true }),
         ]);
-
         setUser(userRes.data);
         setSections(sectionsRes.data);
       } catch (error) {
