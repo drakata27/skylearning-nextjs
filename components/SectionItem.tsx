@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { UserProps } from "@/types/user";
 import ProfileImage from "./ProfileImage";
-// import Link from "next/link";
+import Link from "next/link";
 import { SectionProps } from "@/types/section";
 import { Button } from "./ui/button";
 import axios from "axios";
@@ -32,21 +32,21 @@ const SectionItem = ({
   };
 
   return (
-    // <Link href={`/section/${section.id}`}>
-    <Card className="mt-3 mb-4">
-      <CardHeader>
-        <CardTitle>{section.title}</CardTitle>
-        <CardDescription>{section.subtitle}</CardDescription>
-      </CardHeader>
-      <CardFooter className="space-x-3">
-        <ProfileImage user={user} />
-        <p>By {user.name}</p>
-      </CardFooter>
-      <Button onClick={deleteSection}>
-        <Trash />
-      </Button>
-    </Card>
-    // </Link>
+    <Link href={`/section/${section.id}`}>
+      <Card className="mt-3 mb-4">
+        <CardHeader>
+          <CardTitle>{section.title}</CardTitle>
+          <CardDescription>{section.subtitle}</CardDescription>
+        </CardHeader>
+        <CardFooter className="space-x-3">
+          <ProfileImage user={user} />
+          <p>By {user.name}</p>
+        </CardFooter>
+        <Button onClick={deleteSection}>
+          <Trash />
+        </Button>
+      </Card>
+    </Link>
   );
 };
 
