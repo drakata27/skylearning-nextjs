@@ -35,12 +35,11 @@ const SectionForm = () => {
     const sectionData = {
       title: section?.title || "",
       subtitle: section?.subtitle || "",
-      // owner: user.id ? user.id : user.sub,
     };
     console.log("Sending section data:", sectionData);
 
     axios
-      .post(`${BASE_URL}/section`, sectionData)
+      .post(`${BASE_URL}/section`, sectionData, { withCredentials: true })
       .then((res) => console.log(res.data))
       .catch((e) => window.alert(`Error: ${e}`));
   };
