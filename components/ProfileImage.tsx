@@ -1,7 +1,6 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { User } from "lucide-react";
-// import Link from "next/link";
 import {
   HoverCard,
   HoverCardContent,
@@ -15,8 +14,7 @@ const ProfileImage = ({ user }: { user: UserProps }) => {
     redirect(`/user/${user.id ? user.id : user.sub}`);
   }
   return (
-    // <Link href={`/user/${user.id ? user.id : user.sub}`}>
-    <div onClick={redirectToProfile}>
+    <div className="cursor-pointer" onClick={redirectToProfile}>
       <HoverCard>
         <HoverCardTrigger>
           <Avatar className="size-10 border">
@@ -35,7 +33,6 @@ const ProfileImage = ({ user }: { user: UserProps }) => {
         </HoverCardContent>
       </HoverCard>
     </div>
-    // </Link>
   );
 };
 

@@ -37,7 +37,13 @@ export default function Navbar() {
       .get(`${BASE_URL}/user`, {
         withCredentials: true,
       })
-      .then((res) => setUser(res.data))
+      .then((res) => {
+        if (typeof res.data === "object") {
+          setUser(res.data);
+        } else {
+          setUser(undefined);
+        }
+      })
       .catch((error) => console.log("Error: ", error));
   }, []);
 

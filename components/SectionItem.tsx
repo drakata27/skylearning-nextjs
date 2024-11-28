@@ -8,12 +8,12 @@ import {
 } from "@/components/ui/card";
 import { UserProps } from "@/types/user";
 import ProfileImage from "./ProfileImage";
-import Link from "next/link";
 import { SectionProps } from "@/types/section";
 import { Button } from "./ui/button";
 import axios from "axios";
 import BASE_URL from "@/lib/config";
 import { Trash } from "lucide-react";
+import { redirect } from "next/navigation";
 
 const SectionItem = ({
   section,
@@ -32,15 +32,38 @@ const SectionItem = ({
         console.log(res.data);
       })
       .catch((error) => console.log("Error: ", error));
-    console.log("Request URL:", `${BASE_URL}/section/${section.id}`);
-    console.log("Request Headers:", {
-      withCredentials: true,
-    });
   };
 
+  const fetchSections = async () => {
+    axios
+      .delete(`${BASE_URL}/section`, {
+        withCredentials: true,
+      })
+      .catch((error) => console.log("Error: ", error));
+  };
+
+  const handleDelete = async () => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete section ${section.title}?`
+    );
+
+    if (confirmed) {
+      deleteSection();
+      fetchSections();
+    }
+  };
+
+  function handleOnClick(isDeleting: boolean) {
+    if (isDeleting) {
+      handleDelete();
+    } else {
+      redirect(`/section/${section.id}`);
+    }
+  }
+
   return (
-    <Link href={`/section/${section.id}`}>
-      <Card className="mt-3 mb-4">
+    <Card className="mt-3 mb-4 cursor-pointer">
+      <div onClick={() => handleOnClick(false)}>
         <CardHeader>
           <CardTitle>{section.title}</CardTitle>
           <CardDescription>{section.subtitle}</CardDescription>
@@ -49,11 +72,11 @@ const SectionItem = ({
           <ProfileImage user={user} />
           <p>By {user.name}</p>
         </CardFooter>
-        <Button onClick={deleteSection}>
-          <Trash />
-        </Button>
-      </Card>
-    </Link>
+      </div>
+      <Button className="z-10" onClick={() => handleOnClick(true)}>
+        <Trash />
+      </Button>
+    </Card>
   );
 };
 

@@ -8,6 +8,7 @@ import { SectionProps } from "@/types/section";
 import { UserProps } from "@/types/user";
 import axios from "axios";
 import BASE_URL from "@/lib/config";
+import { redirect } from "next/navigation";
 
 const SectionForm = () => {
   const [section, setSection] = useState<SectionProps>({
@@ -36,12 +37,13 @@ const SectionForm = () => {
       title: section?.title || "",
       subtitle: section?.subtitle || "",
     };
-    console.log("Sending section data:", sectionData);
 
-    axios
-      .post(`${BASE_URL}/section`, sectionData, { withCredentials: true })
-      .then((res) => console.log(res.data))
-      .catch((e) => window.alert(`Error: ${e}`));
+    try {
+      axios.post(`${BASE_URL}/section`, sectionData, { withCredentials: true });
+    } catch (e) {
+      window.alert(`Error: ${e}`);
+    }
+    redirect("/");
   };
 
   const handleInputChange = (e) => {
