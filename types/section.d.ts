@@ -2,5 +2,5 @@ export interface SectionProps {
   id: number;
   title: string;
   subtitle: string;
-  // ownderId: string;
+  userId: number;
 }

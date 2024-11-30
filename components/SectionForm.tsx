@@ -15,6 +15,7 @@ const SectionForm = () => {
     id: 0,
     title: "",
     subtitle: "",
+    userId: 0,
   });
   const [user, setUser] = useState<UserProps>({
     id: 0,
@@ -36,6 +37,7 @@ const SectionForm = () => {
     const sectionData = {
       title: section?.title || "",
       subtitle: section?.subtitle || "",
+      userId: user.id || user.sub,
     };
 
     try {
