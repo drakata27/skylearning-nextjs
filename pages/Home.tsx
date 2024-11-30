@@ -22,6 +22,12 @@ const HomePage = () => {
           axios.get(`${BASE_URL}/section`, { withCredentials: true }),
         ]);
 
+        if (typeof sectionsRes.data !== "object") {
+          console.warn("Unauthenticated: HTML response received.");
+          setUser(undefined);
+          return;
+        }
+
         setUser(userRes.data);
         setSections(sectionsRes.data);
       } catch (error) {
@@ -34,10 +40,11 @@ const HomePage = () => {
     fetchData();
   }, []);
 
+  if (user === undefined) return <div className="heading">Please login</div>;
+
   return (
     <div className="heading space-y-3">
       <h1 className="">Home</h1>
-
       {isLoading ? (
         <>
           {[...Array(10)].map((_, index) => (

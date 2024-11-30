@@ -9,6 +9,7 @@ import BASE_URL from "../lib/config";
 import { UserProps } from "@/types/user";
 import axios from "axios";
 import ProfileImage from "./ProfileImage";
+import { redirect } from "next/navigation";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -36,7 +37,13 @@ export default function Navbar() {
       .get(`${BASE_URL}/user`, {
         withCredentials: true,
       })
-      .then((res) => setUser(res.data))
+      .then((res) => {
+        if (typeof res.data === "object") {
+          setUser(res.data);
+        } else {
+          setUser(undefined);
+        }
+      })
       .catch((error) => console.log("Error: ", error));
   }, []);
 
@@ -70,7 +77,7 @@ export default function Navbar() {
           <ModeToggle />
           {user ? (
             <div className="flex space-x-5">
-              <button>
+              <button onClick={() => redirect("/section/add")}>
                 <PlusSquare />
               </button>
               <ProfileImage user={user} />
