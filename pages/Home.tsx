@@ -13,30 +13,30 @@ const HomePage = () => {
   const [sections, setSections] = useState<SectionProps[]>([]);
   const [isLoading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const [userRes, sectionsRes] = await Promise.all([
-          axios.get(`${BASE_URL}/user`, { withCredentials: true }),
-          axios.get(`${BASE_URL}/section`, { withCredentials: true }),
-        ]);
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const [userRes, sectionsRes] = await Promise.all([
+        axios.get(`${BASE_URL}/user`, { withCredentials: true }),
+        axios.get(`${BASE_URL}/section`, { withCredentials: true }),
+      ]);
 
-        if (typeof sectionsRes.data !== "object") {
-          console.warn("Unauthenticated: HTML response received.");
-          setUser(undefined);
-          return;
-        }
-
-        setUser(userRes.data);
-        setSections(sectionsRes.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
+      if (typeof sectionsRes.data !== "object") {
+        console.warn("Unauthenticated: HTML response received.");
+        setUser(undefined);
+        return;
       }
-    };
 
+      setUser(userRes.data);
+      setSections(sectionsRes.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -53,7 +53,12 @@ const HomePage = () => {
         </>
       ) : (
         sections.map((section: SectionProps, id: number) => (
-          <SectionItem key={id} section={section} user={user!} />
+          <SectionItem
+            key={id}
+            section={section}
+            user={user!}
+            refreshSection={fetchData}
+          />
         ))
       )}
     </div>

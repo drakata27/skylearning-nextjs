@@ -12,44 +12,37 @@ import { SectionProps } from "@/types/section";
 import { Button } from "./ui/button";
 import axios from "axios";
 import BASE_URL from "@/lib/config";
-import { Trash } from "lucide-react";
-import { redirect } from "next/navigation";
+import { Pen, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const SectionItem = ({
   section,
   user,
+  refreshSection,
 }: {
   section: SectionProps;
   user: UserProps;
+  refreshSection: () => void;
 }) => {
+  const router = useRouter();
   const deleteSection = async () => {
-    axios
-      .delete(`${BASE_URL}/section/${section.id}`, {
+    try {
+      await axios.delete(`${BASE_URL}/section/${section.id}`, {
         withCredentials: true,
-      })
-      .then((res) => {
-        console.log("Section deleted successfully!");
-        console.log(res.data);
-      })
-      .catch((error) => console.log("Error: ", error));
+      });
+      refreshSection();
+    } catch (e) {
+      console.log("Error: ", e);
+    }
   };
 
-  const fetchSections = async () => {
-    axios
-      .delete(`${BASE_URL}/section`, {
-        withCredentials: true,
-      })
-      .catch((error) => console.log("Error: ", error));
-  };
-
-  const handleDelete = async () => {
+  const handleDelete = () => {
     const confirmed = window.confirm(
       `Are you sure you want to delete section ${section.title}?`
     );
 
     if (confirmed) {
       deleteSection();
-      fetchSections();
     }
   };
 
@@ -57,12 +50,12 @@ const SectionItem = ({
     if (isDeleting) {
       handleDelete();
     } else {
-      redirect(`/section/${section.id}`);
+      router.push(`/section/${section.id}`);
     }
   }
 
   return (
-    <Card className="mt-3 mb-4 cursor-pointer">
+    <Card className="mt-3 p-2 mb-4 cursor-pointer">
       <div onClick={() => handleOnClick(false)}>
         <CardHeader>
           <CardTitle>{section.title}</CardTitle>
@@ -73,9 +66,16 @@ const SectionItem = ({
           <p>By {user.name}</p>
         </CardFooter>
       </div>
-      <Button className="z-10" onClick={() => handleOnClick(true)}>
-        <Trash />
-      </Button>
+
+      <div className="space-x-4">
+        <Button onClick={() => handleOnClick(true)}>
+          <Trash />
+        </Button>
+
+        <Button onClick={() => router.push(`/section/${section.id}/edit`)}>
+          <Pen />
+        </Button>
+      </div>
     </Card>
   );
 };
