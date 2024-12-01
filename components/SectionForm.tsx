@@ -8,15 +8,24 @@ import { SectionProps } from "@/types/section";
 import { UserProps } from "@/types/user";
 import axios from "axios";
 import BASE_URL from "@/lib/config";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-const SectionForm = () => {
+const SectionForm = ({
+  isEditing = false,
+  id,
+}: {
+  isEditing: boolean;
+  id: string;
+}) => {
+  const router = useRouter();
+
   const [section, setSection] = useState<SectionProps>({
     id: 0,
     title: "",
     subtitle: "",
     userId: 0,
   });
+
   const [user, setUser] = useState<UserProps>({
     id: 0,
     sub: 0,
@@ -24,14 +33,33 @@ const SectionForm = () => {
   });
 
   useEffect(() => {
-    const fetchData = async () => {
-      axios
-        .get(`${BASE_URL}/user`, { withCredentials: true })
-        .then((res) => setUser(res.data))
-        .catch((e) => console.log("Error fetching data", e));
+    const fetchUser = async () => {
+      try {
+        const userRes = await axios.get(`${BASE_URL}/user`, {
+          withCredentials: true,
+        });
+        setUser(userRes.data);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
     };
-    fetchData();
-  }, []);
+
+    const fetchSection = async () => {
+      if (isEditing) {
+        try {
+          const sectionRes = await axios.get(`${BASE_URL}/section/${id}`, {
+            withCredentials: true,
+          });
+          setSection(sectionRes.data);
+        } catch (error) {
+          console.error("Error fetching section data:", error);
+        }
+      }
+    };
+
+    fetchUser();
+    fetchSection();
+  }, [id, isEditing]);
 
   const createSection = async () => {
     const sectionData = {
@@ -41,30 +69,50 @@ const SectionForm = () => {
     };
 
     try {
-      axios.post(`${BASE_URL}/section`, sectionData, { withCredentials: true });
+      await axios.post(`${BASE_URL}/section`, sectionData, {
+        withCredentials: true,
+      });
+      router.push("/");
     } catch (e) {
-      window.alert(`Error: ${e}`);
+      window.alert(`Error creating section: ${e}`);
     }
-    redirect("/");
   };
 
-  const handleInputChange = (e) => {
+  const updateSection = async () => {
+    const sectionData = {
+      title: section?.title || "",
+      subtitle: section?.subtitle || "",
+      userId: section.userId,
+    };
+
+    try {
+      await axios.put(`${BASE_URL}/section/${id}`, sectionData, {
+        withCredentials: true,
+      });
+      router.push("/");
+    } catch (e) {
+      window.alert(`Error updating section: ${e}`);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setSection({ ...section, [name]: value });
   };
 
-  const handleSubmit = (e) => {
-    // e.preventDefault();
-    try {
-      createSection();
-    } catch (e) {
-      alert(e);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (isEditing) {
+      await updateSection();
+    } else {
+      await createSection();
     }
   };
 
   return (
     <form
-      action={handleSubmit}
+      onSubmit={handleSubmit}
       className="rounded-xl border mt-5 space-y-4 p-5"
     >
       <Input
@@ -79,9 +127,9 @@ const SectionForm = () => {
         onChange={handleInputChange}
         placeholder="Add subtitle..."
       />
-      <p>Author: {user.name}</p>
+
       <Button type="submit">
-        Add <Send />
+        {isEditing ? "Save" : "Add"} <Send />
       </Button>
     </form>
   );

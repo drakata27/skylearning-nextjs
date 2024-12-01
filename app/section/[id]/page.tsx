@@ -1,26 +1,21 @@
 "use client";
 
 import axios from "axios";
-import React, { FC, useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import BASE_URL from "@/lib/config";
 import { UserProps } from "@/types/user";
 import { SectionProps } from "@/types/section";
 
-interface PageProps {
-  params: {
-    id: string; // This matches the dynamic route
-  };
-}
-
-const SectionDetail: FC<PageProps> = ({ params }) => {
+const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
   const [user, setUser] = useState<UserProps>();
   const [section, setSection] = useState<SectionProps>({
     id: 0,
     title: "undefined",
     subtitle: "undefined",
+    userId: 0,
   });
   const [isLoading, setLoading] = useState(true);
-  const { id } = params;
+  const { id } = use(params);
 
   useEffect(() => {
     const fetchData = async () => {
