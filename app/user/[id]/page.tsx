@@ -31,6 +31,7 @@ const Profile = () => {
     <div className="container">
       <h1 className="heading">Profile</h1>
       {isLoading ? <SkeletonCard /> : <UserInfo user={user!} />}
+      <h1 className="heading">Recent Sections</h1>
     </div>
   );
 };
