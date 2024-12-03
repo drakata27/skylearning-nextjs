@@ -3,10 +3,48 @@ import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { NoteProps } from "@/types/note";
 import { Button } from "./ui/button";
 import { Pen, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import BASE_URL from "@/lib/config";
 
-const NoteItem = ({ note }: { note: NoteProps }) => {
+const NoteItem = ({
+  note,
+  refreshNote,
+  id,
+}: {
+  note: NoteProps;
+  refreshNote: () => void;
+  id: number;
+}) => {
+  const router = useRouter();
+
+  const deleteNote = async () => {
+    try {
+      await axios.delete(`${BASE_URL}/section/${id}/note/${note.noteId}`, {
+        withCredentials: true,
+      });
+      refreshNote();
+    } catch (e) {
+      console.log("Error: ", e);
+    }
+  };
+
+  const handleDelete = () => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete note ${note.title}?`
+    );
+
+    if (confirmed) {
+      deleteNote();
+    }
+  };
+
   function handleOnClick(isDeleting: boolean) {
-    console.log("isDeleting,", isDeleting);
+    if (isDeleting) {
+      handleDelete();
+    } else {
+      router.push(`/section/${id}/note/${note.noteId}`);
+    }
   }
 
   return (
@@ -17,14 +55,23 @@ const NoteItem = ({ note }: { note: NoteProps }) => {
             <CardTitle>{note.title}</CardTitle>
             <div className="space-x-4">
               <Button
-                className="bg-red-600"
-                onClick={() => handleOnClick(true)}
+                className="bg-yellow-500"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push(`/section/${id}/note/${note.noteId}/edit`);
+                }}
               >
-                <Trash />
+                <Pen />
               </Button>
 
-              <Button className="bg-yellow-500">
-                <Pen />
+              <Button
+                className="bg-red-600"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOnClick(true);
+                }}
+              >
+                <Trash />
               </Button>
             </div>
           </div>
