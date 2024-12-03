@@ -8,8 +8,10 @@ import { SectionProps } from "@/types/section";
 import NoteItem from "@/components/NoteItem";
 import { NoteProps } from "@/types/note";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
+  const router = useRouter();
   const [user, setUser] = useState<UserProps>();
   const [section, setSection] = useState<SectionProps>({
     id: 0,
@@ -34,7 +36,7 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
         ]);
 
         axios
-          .get(`/section/${id}/note`, {
+          .get(`${BASE_URL}/section/${id}/note`, {
             withCredentials: true,
           })
           .then((res) => setNotes(res.data))
@@ -42,6 +44,11 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
 
         setUser(userRes.data);
         setSection(sectionsRes.data);
+        if (notes.length == 0) {
+          setMessage("No notes");
+        } else {
+          setMessage("");
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -49,9 +56,6 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
       }
     };
     fetchData();
-    if (notes.length == 0) {
-      setMessage("No notes");
-    }
   }, [id, notes.length]);
 
   return (
@@ -64,7 +68,9 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
       <div className="mt-3">
         <div className="flex justify-between">
           <h1 className="heading">Notes</h1>
-          <Button>Add Note</Button>
+          <Button onClick={() => router.push(`/section/${section.id}/add`)}>
+            Add Note
+          </Button>
         </div>
 
         {notes.map((note, id: number) => (

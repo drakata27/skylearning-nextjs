@@ -13,19 +13,23 @@ const NoteItem = ({ note }: { note: NoteProps }) => {
     <Card className="mt-3 p-2 mb-4 cursor-pointer">
       <div onClick={() => handleOnClick(false)}>
         <CardHeader>
-          <CardTitle>{note.title}</CardTitle>
+          <div className="flex justify-between">
+            <CardTitle>{note.title}</CardTitle>
+            <div className="space-x-4">
+              <Button
+                className="bg-red-600"
+                onClick={() => handleOnClick(true)}
+              >
+                <Trash />
+              </Button>
+
+              <Button className="bg-yellow-500">
+                <Pen />
+              </Button>
+            </div>
+          </div>
         </CardHeader>
         <CardFooter className="space-x-3"></CardFooter>
-      </div>
-
-      <div className="space-x-4">
-        <Button onClick={() => handleOnClick(true)}>
-          <Trash />
-        </Button>
-
-        <Button>
-          <Pen />
-        </Button>
       </div>
     </Card>
   );
