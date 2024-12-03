@@ -24,6 +24,15 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params);
   const [message, setMessage] = useState("");
 
+  const fetchNotes = async () => {
+    axios
+      .get(`${BASE_URL}/section/${id}/note`, {
+        withCredentials: true,
+      })
+      .then((res) => setNotes(res.data))
+      .catch((e) => console.log(e));
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -67,14 +76,19 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
 
       <div className="mt-3">
         <div className="flex justify-between">
-          <h1 className="heading">Notes</h1>
+          <h1>Notes</h1>
           <Button onClick={() => router.push(`/section/${section.id}/add`)}>
             Add Note
           </Button>
         </div>
 
         {notes.map((note, id: number) => (
-          <NoteItem key={id} note={note} />
+          <NoteItem
+            key={id}
+            note={note}
+            id={section.id}
+            refreshNote={fetchNotes}
+          />
         ))}
       </div>
       {message}

@@ -63,8 +63,8 @@ const SectionForm = ({
 
   const createSection = async () => {
     const sectionData = {
-      title: section?.title || "",
-      subtitle: section?.subtitle || "",
+      title: section.title || "",
+      subtitle: section.subtitle || "",
       userId: user.id || user.sub,
     };
 
@@ -80,8 +80,8 @@ const SectionForm = ({
 
   const updateSection = async () => {
     const sectionData = {
-      title: section?.title || "",
-      subtitle: section?.subtitle || "",
+      title: section?.title as string,
+      subtitle: section?.subtitle as string,
       userId: section.userId,
     };
 
@@ -103,10 +103,14 @@ const SectionForm = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (isEditing) {
-      await updateSection();
+    if (section.title.length === 0 && section.subtitle.length === 0) {
+      alert("Section title or content is too short");
     } else {
-      await createSection();
+      if (isEditing) {
+        await updateSection();
+      } else {
+        await createSection();
+      }
     }
   };
 

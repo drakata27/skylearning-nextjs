@@ -62,17 +62,23 @@ const SectionItem = ({
             <CardTitle>{section.title}</CardTitle>
             <div className="space-x-4">
               <Button
-                className="bg-red-600"
-                onClick={() => handleOnClick(true)}
+                className="bg-yellow-500"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push(`/section/${section.id}/edit`);
+                }}
               >
-                <Trash />
+                <Pen />
               </Button>
 
               <Button
-                className="bg-yellow-500"
-                onClick={() => router.push(`/section/${section.id}/edit`)}
+                className="bg-red-600"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOnClick(true);
+                }}
               >
-                <Pen />
+                <Trash />
               </Button>
             </div>
           </div>
