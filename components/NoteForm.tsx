@@ -8,7 +8,8 @@ import axios from "axios";
 import BASE_URL from "@/lib/config";
 import { useRouter } from "next/navigation";
 import { NoteProps } from "@/types/note";
-import { Textarea } from "./ui/textarea";
+import MDEditor from "@uiw/react-md-editor";
+import { useTheme } from "next-themes";
 
 const NoteForm = ({
   isEditing = false,
@@ -20,6 +21,7 @@ const NoteForm = ({
   noteid: string;
 }) => {
   const router = useRouter();
+  const { theme } = useTheme();
 
   const [note, setNote] = useState<NoteProps>({
     noteId: 0,
@@ -113,12 +115,28 @@ const NoteForm = ({
         onChange={handleInputChange}
         placeholder="Add title..."
       />
-      <Textarea
-        name="content"
-        value={note.content}
-        onChange={handleInputChange}
-        placeholder="Add content..."
-      />
+      <div data-color-mode={theme === "light" ? "light" : "dark"}>
+        <MDEditor
+          value={note.content}
+          onChange={(value) =>
+            setNote((prevNote) => ({
+              ...prevNote,
+              content: value || "",
+            }))
+          }
+          preview="edit"
+          autoCapitalize="none"
+          height={300}
+          style={{ borderRadius: 20, overflow: "hidden" }}
+          textareaProps={{
+            placeholder: "Add your content",
+            autoCapitalize: "none",
+          }}
+          previewOptions={{
+            disallowedElements: ["style"],
+          }}
+        />
+      </div>
 
       <Button type="submit">
         {isEditing ? "Save" : "Add"} <Send />
