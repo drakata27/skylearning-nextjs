@@ -7,6 +7,9 @@ import React, { use, useEffect, useState } from "react";
 import markdownit from "markdown-it";
 import MDEditor from "@uiw/react-md-editor";
 import { useTheme } from "next-themes";
+import { Button } from "@/components/ui/button";
+import { Pen, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const NoteDetail = ({
   params,
@@ -15,6 +18,7 @@ const NoteDetail = ({
 }) => {
   const md = markdownit();
   const { theme } = useTheme();
+  const router = useRouter();
 
   const { id, noteid } = use(params);
   const [note, setNote] = useState<NoteProps>({
@@ -38,9 +42,52 @@ const NoteDetail = ({
 
   const parsedContent = md.render(note?.content || "");
 
+  const deleteSection = async () => {
+    try {
+      await axios.delete(`${BASE_URL}/section/${id}/note/${noteid}`, {
+        withCredentials: true,
+      });
+    } catch (e) {
+      console.log("Error: ", e);
+    }
+  };
+
+  const handleDelete = () => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete section ${note.title}?`
+    );
+
+    if (confirmed) {
+      deleteSection();
+      router.push(`/section/${id}`);
+    }
+  };
+
   return (
-    <div className="ml-[20px] mr-[20px] sm:ml-[30px] sm:mr-[30px] md:ml-[100px] md:mr-[100px] lg:ml-[200px] lg:mr-[200px] xl:ml-[300px] xl:mr-[300px]">
-      <h1>{note.title}</h1>
+    <div className="mt-4 ml-[20px] mr-[20px] sm:ml-[30px] sm:mr-[30px] md:ml-[100px] md:mr-[100px] lg:ml-[200px] lg:mr-[200px] xl:ml-[300px] xl:mr-[300px]">
+      <div className="flex justify-between">
+        <h1 className="heading mb-4">{note.title}</h1>
+
+        <div className="flex space-x-3">
+          <Button
+            className="bg-yellow-500"
+            onClick={() => {
+              router.push(`/section/${id}/note/${noteid}/edit`);
+            }}
+          >
+            <Pen />
+          </Button>
+
+          <Button
+            className="bg-red-600"
+            onClick={() => {
+              handleDelete();
+            }}
+          >
+            <Trash />
+          </Button>
+        </div>
+      </div>
       {parsedContent ? (
         <div data-color-mode={theme === "dark" ? "dark" : "light"}>
           <MDEditor.Markdown

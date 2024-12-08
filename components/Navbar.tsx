@@ -9,12 +9,13 @@ import BASE_URL from "../lib/config";
 import { UserProps } from "@/types/user";
 import axios from "axios";
 import ProfileImage from "./ProfileImage";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [user, setUser] = useState<UserProps>();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -52,7 +53,8 @@ export default function Navbar() {
   };
 
   const logIn = () => {
-    window.location.href = `${BASE_URL}`;
+    // window.location.href = `${BASE_URL}`;
+    router.push("/login");
   };
 
   return (
