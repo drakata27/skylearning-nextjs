@@ -1,11 +1,11 @@
 import React from "react";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { NoteProps } from "@/types/note";
-import { Button } from "./ui/button";
-import { Pen, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import BASE_URL from "@/lib/config";
+import DeleteButton from "./buttons/DeleteButton";
+import EditButton from "./buttons/EditButton";
 
 const NoteItem = ({
   note,
@@ -54,25 +54,8 @@ const NoteItem = ({
           <div className="flex justify-between">
             <CardTitle>{note.title}</CardTitle>
             <div className="space-x-4">
-              <Button
-                className="bg-yellow-500"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  router.push(`/section/${id}/note/${note.noteId}/edit`);
-                }}
-              >
-                <Pen />
-              </Button>
-
-              <Button
-                className="bg-red-600"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleOnClick(true);
-                }}
-              >
-                <Trash />
-              </Button>
+              <EditButton url={`/section/${id}/note/${note.noteId}/edit`} />
+              <DeleteButton handleOnClick={handleOnClick} />
             </div>
           </div>
         </CardHeader>

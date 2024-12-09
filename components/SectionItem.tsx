@@ -9,11 +9,11 @@ import {
 import { UserProps } from "@/types/user";
 import ProfileImage from "./ProfileImage";
 import { SectionProps } from "@/types/section";
-import { Button } from "./ui/button";
 import axios from "axios";
 import BASE_URL from "@/lib/config";
-import { Pen, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
+import EditButton from "./buttons/EditButton";
+import DeleteButton from "./buttons/DeleteButton";
 
 const SectionItem = ({
   section,
@@ -61,25 +61,8 @@ const SectionItem = ({
           <div className="flex justify-between">
             <CardTitle>{section.title}</CardTitle>
             <div className="space-x-4">
-              <Button
-                className="bg-yellow-500"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  router.push(`/section/${section.id}/edit`);
-                }}
-              >
-                <Pen />
-              </Button>
-
-              <Button
-                className="bg-red-600"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleOnClick(true);
-                }}
-              >
-                <Trash />
-              </Button>
+              <EditButton url={`/section/${section.id}/edit`} />
+              <DeleteButton handleOnClick={handleOnClick} />
             </div>
           </div>
           <CardDescription>{section.subtitle}</CardDescription>

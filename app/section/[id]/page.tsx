@@ -10,7 +10,8 @@ import { NoteProps } from "@/types/note";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import Searchbox from "@/components/Searchbox"; // Import Searchbox component
-import { ArrowBigLeft } from "lucide-react";
+import BackButton from "@/components/buttons/BackButton";
+import { NotebookPenIcon, StarIcon } from "lucide-react";
 
 const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
   const router = useRouter();
@@ -22,8 +23,7 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
     userId: 0,
   });
   const [notes, setNotes] = useState<NoteProps[]>([]);
-  const [filteredNotes, setFilteredNotes] = useState<NoteProps[]>([]); // Filtered notes state
-  const [isLoading, setLoading] = useState(true);
+  const [filteredNotes, setFilteredNotes] = useState<NoteProps[]>([]);
   const { id } = use(params);
   const [message, setMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -39,7 +39,6 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
       try {
         const [userRes, sectionsRes] = await Promise.all([
           axios.get(`${BASE_URL}/user`, { withCredentials: true }),
@@ -56,6 +55,8 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
           .catch((e) => console.log(e));
 
         setUser(userRes.data);
+        console.log("Welcome,", user);
+
         setSection(sectionsRes.data);
         if (notes.length === 0) {
           setMessage("No notes");
@@ -64,12 +65,10 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
         }
       } catch (error) {
         console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
       }
     };
     fetchData();
-  }, [id, notes.length]);
+  }, [id, notes.length, user]);
 
   useEffect(() => {
     if (searchQuery === "") {
@@ -94,16 +93,21 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
 
       <div className="mt-3">
         <div className="flex justify-between">
-          <Button
-            onClick={() => {
-              router.push("/");
-            }}
-          >
-            <ArrowBigLeft />
-          </Button>
-          <Button onClick={() => router.push(`/section/${section.id}/add`)}>
-            Add Note
-          </Button>
+          <BackButton url={"/"} />
+
+          <div className="space-x-5">
+            <Button
+              onClick={() => router.push(`/section/${section.id}/deck/add`)}
+            >
+              <StarIcon />
+              Add Deck
+            </Button>
+
+            <Button onClick={() => router.push(`/section/${section.id}/add`)}>
+              <NotebookPenIcon />
+              Add Note
+            </Button>
+          </div>
         </div>
 
         <div className="mt-4">
