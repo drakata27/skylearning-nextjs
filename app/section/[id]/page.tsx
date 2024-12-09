@@ -27,6 +27,7 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
   const [notes, setNotes] = useState<NoteProps[]>([]);
   const [decks, setDecks] = useState<DeckProps[]>([]);
   const [filteredNotes, setFilteredNotes] = useState<NoteProps[]>([]);
+  const [filteredDecks, setFilteredDecks] = useState<DeckProps[]>([]);
   const { id } = use(params);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -83,6 +84,7 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
   useEffect(() => {
     if (searchQuery === "") {
       setFilteredNotes(notes);
+      setFilteredDecks(decks);
     } else {
       setFilteredNotes(
         notes.filter(
@@ -91,8 +93,16 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
             note.content.toLowerCase().includes(searchQuery.toLowerCase())
         )
       );
+
+      setFilteredDecks(
+        decks.filter(
+          (deck) =>
+            deck.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            deck.description.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
     }
-  }, [searchQuery, notes]);
+  }, [searchQuery, notes, decks]);
   return (
     <div className="container">
       <div className="space-y-3">
@@ -134,7 +144,8 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
         ))}
 
         <h1 className="heading">Decks</h1>
-        {decks.map((deck, id) => (
+        {filteredDecks.length === 0 && <p>No decks found</p>}
+        {filteredDecks.map((deck, id) => (
           <DeckItem
             key={id}
             deck={deck}
