@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 import Searchbox from "@/components/Searchbox"; // Import Searchbox component
 import BackButton from "@/components/buttons/BackButton";
 import { NotebookPenIcon, StarIcon } from "lucide-react";
+import { DeckProps } from "@/types/deck";
+import DeckItem from "@/components/items/DeckItem";
 
 const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
   const router = useRouter();
@@ -23,9 +25,9 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
     userId: 0,
   });
   const [notes, setNotes] = useState<NoteProps[]>([]);
+  const [decks, setDecks] = useState<DeckProps[]>([]);
   const [filteredNotes, setFilteredNotes] = useState<NoteProps[]>([]);
   const { id } = use(params);
-  const [message, setMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const fetchNotes = async () => {
@@ -34,6 +36,14 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
         withCredentials: true,
       })
       .then((res) => setNotes(res.data))
+      .catch((e) => console.log(e));
+  };
+  const fetchDecks = async () => {
+    axios
+      .get(`${BASE_URL}/section/${id}/decks`, {
+        withCredentials: true,
+      })
+      .then((res) => setDecks(res.data))
       .catch((e) => console.log(e));
   };
 
@@ -47,28 +57,28 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
           }),
         ]);
 
-        axios
-          .get(`${BASE_URL}/section/${id}/note`, {
+        const [noteRes, deckRes] = await Promise.all([
+          axios.get(`${BASE_URL}/section/${id}/note`, {
             withCredentials: true,
-          })
-          .then((res) => setNotes(res.data))
-          .catch((e) => console.log(e));
+          }),
+          axios.get(`${BASE_URL}/section/${id}/decks`, {
+            withCredentials: true,
+          }),
+        ]);
 
         setUser(userRes.data);
-        console.log("Welcome,", user);
-
         setSection(sectionsRes.data);
-        if (notes.length === 0) {
-          setMessage("No notes");
-        } else {
-          setMessage("");
-        }
+        setNotes(noteRes.data);
+        setDecks(deckRes.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
+
     fetchData();
-  }, [id, notes.length, user]);
+  }, [id]);
+
+  console.log("User", user?.name);
 
   useEffect(() => {
     if (searchQuery === "") {
@@ -83,9 +93,8 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
       );
     }
   }, [searchQuery, notes]);
-
   return (
-    <div className="ml-[20px] mr-[20px] sm:ml-[30px] sm:mr-[30px] md:ml-[100px] md:mr-[100px] lg:ml-[200px] lg:mr-[200px] xl:ml-[300px] xl:mr-[300px]">
+    <div className="container">
       <div className="space-y-3">
         <h1 className="heading">{section.title}</h1>
         <h2 className="text-gray-500">{section.subtitle}</h2>
@@ -97,7 +106,7 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
 
           <div className="space-x-5">
             <Button
-              onClick={() => router.push(`/section/${section.id}/deck/add`)}
+              onClick={() => router.push(`/section/${section.id}/decks/add`)}
             >
               <StarIcon />
               Add Deck
@@ -113,9 +122,8 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
         <div className="mt-4">
           <Searchbox onSearch={setSearchQuery} />
         </div>
-
+        <h1 className="heading mt-3">Notes</h1>
         {filteredNotes.length === 0 && <p>No notes found</p>}
-
         {filteredNotes.map((note, id: number) => (
           <NoteItem
             key={id}
@@ -124,8 +132,17 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
             refreshNote={fetchNotes}
           />
         ))}
+
+        <h1 className="heading">Decks</h1>
+        {decks.map((deck, id) => (
+          <DeckItem
+            key={id}
+            deck={deck}
+            id={section.id}
+            refreshDeck={fetchDecks}
+          />
+        ))}
       </div>
-      {message}
     </div>
   );
 };

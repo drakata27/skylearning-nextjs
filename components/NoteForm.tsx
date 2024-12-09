@@ -18,7 +18,7 @@ const NoteForm = ({
 }: {
   isEditing: boolean;
   id: string;
-  noteid: string;
+  noteid?: string;
 }) => {
   const router = useRouter();
   const { theme } = useTheme();
