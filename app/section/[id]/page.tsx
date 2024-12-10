@@ -104,7 +104,7 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
     }
   }, [searchQuery, notes, decks]);
   return (
-    <div className="container">
+    <div className="ml-[20px] mr-[20px] sm:ml-[30px] sm:mr-[30px] md:ml-[100px] md:mr-[100px] lg:ml-[200px] lg:mr-[200px] xl:ml-[300px] xl:mr-[300px]">
       <div className="space-y-3">
         <h1 className="heading">{section.title}</h1>
         <h2 className="text-gray-500">{section.subtitle}</h2>
@@ -116,6 +116,7 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
 
           <div className="space-x-5">
             <Button
+              className="bg-yellow-300"
               onClick={() => router.push(`/section/${section.id}/decks/add`)}
             >
               <StarIcon />

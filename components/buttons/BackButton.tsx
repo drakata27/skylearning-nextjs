@@ -5,9 +5,10 @@ import { ArrowBigLeft } from "lucide-react";
 
 const BackButton = ({ url }: { url: string }) => {
   const router = useRouter();
+
   return (
     <Button
-      className="bg-red-500"
+      className="bg-red-500 hover:bg-red-700"
       onClick={(e) => {
         e.stopPropagation();
         router.push(url);
