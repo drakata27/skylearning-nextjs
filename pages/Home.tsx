@@ -7,6 +7,7 @@ import { UserProps } from "@/types/user";
 import { SkeletonCard } from "@/components/SkeletonCard";
 import { SectionProps } from "@/types/section";
 import Searchbox from "@/components/Searchbox";
+import Oauth2Login from "@/components/Oauth2Login";
 
 const HomePage = () => {
   const [user, setUser] = useState<UserProps>();
@@ -55,13 +56,7 @@ const HomePage = () => {
     }
   }, [searchQuery, sections]);
 
-  if (user === undefined)
-    return (
-      <div className="items-center">
-        <h1 className="text-9xl">Unauthenticated</h1>
-        <p className="text-3xl">Please log in</p>
-      </div>
-    );
+  if (user === undefined) return <Oauth2Login />;
 
   return (
     <div className="heading space-y-3">

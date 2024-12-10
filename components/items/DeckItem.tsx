@@ -1,30 +1,30 @@
 import React from "react";
-import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { NoteProps } from "@/types/note";
+import { Card, CardFooter, CardHeader, CardTitle } from "../ui/card";
+import { StarIcon } from "lucide-react";
+import EditButton from "../buttons/EditButton";
+import DeleteButton from "../buttons/DeleteButton";
+import { DeckProps } from "@/types/deck";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import BASE_URL from "@/lib/config";
-import DeleteButton from "./buttons/DeleteButton";
-import EditButton from "./buttons/EditButton";
-import { NotebookIcon } from "lucide-react";
 
-const NoteItem = ({
-  note,
-  refreshNote,
+const DeckItem = ({
+  deck,
+  refreshDeck,
   id,
 }: {
-  note: NoteProps;
-  refreshNote: () => void;
+  deck: DeckProps;
+  refreshDeck: () => void;
   id: number;
 }) => {
   const router = useRouter();
 
-  const deleteNote = async () => {
+  const deleteDeck = async () => {
     try {
-      await axios.delete(`${BASE_URL}/section/${id}/note/${note.noteId}`, {
+      await axios.delete(`${BASE_URL}/section/${id}/decks/${deck.deckId}`, {
         withCredentials: true,
       });
-      refreshNote();
+      refreshDeck();
     } catch (e) {
       console.log("Error: ", e);
     }
@@ -32,11 +32,11 @@ const NoteItem = ({
 
   const handleDelete = () => {
     const confirmed = window.confirm(
-      `Are you sure you want to delete note ${note.title}?`
+      `Are you sure you want to delete deck ${deck.name}?`
     );
 
     if (confirmed) {
-      deleteNote();
+      deleteDeck();
     }
   };
 
@@ -44,7 +44,7 @@ const NoteItem = ({
     if (isDeleting) {
       handleDelete();
     } else {
-      router.push(`/section/${id}/note/${note.noteId}`);
+      router.push(`/section/${id}/decks/${deck.deckId}`);
     }
   }
 
@@ -53,19 +53,19 @@ const NoteItem = ({
       <div onClick={() => handleOnClick(false)}>
         <CardHeader>
           <div className="flex justify-between">
-            <CardTitle>{note.title}</CardTitle>
+            <CardTitle>{deck.name}</CardTitle>
             <div className="space-x-4">
-              <EditButton url={`/section/${id}/note/${note.noteId}/edit`} />
+              <EditButton url={`/section/${id}/decks/${deck.deckId}/edit`} />
               <DeleteButton handleOnClick={handleOnClick} />
             </div>
           </div>
         </CardHeader>
         <CardFooter className="space-x-3">
-          <NotebookIcon />
+          <StarIcon />
         </CardFooter>
       </div>
     </Card>
   );
 };
 
-export default NoteItem;
+export default DeckItem;

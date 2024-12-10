@@ -9,6 +9,7 @@ import { UserProps } from "@/types/user";
 import axios from "axios";
 import BASE_URL from "@/lib/config";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const SectionForm = ({
   isEditing = false,
@@ -63,8 +64,8 @@ const SectionForm = ({
 
   const createSection = async () => {
     const sectionData = {
-      title: section.title || "",
-      subtitle: section.subtitle || "",
+      title: section.title as string,
+      subtitle: section.subtitle as string,
       userId: user.id || user.sub,
     };
 
@@ -73,8 +74,10 @@ const SectionForm = ({
         withCredentials: true,
       });
       router.push("/");
+      toast("Section has been created.");
     } catch (e) {
-      window.alert(`Error creating section: ${e}`);
+      console.log(`Error creating section: ${e}`);
+      toast(`Error creating section: ${e}`);
     }
   };
 
@@ -90,8 +93,10 @@ const SectionForm = ({
         withCredentials: true,
       });
       router.push("/");
+      toast("Section has been updated.");
     } catch (e) {
-      window.alert(`Error updating section: ${e}`);
+      console.log(`Error updating section: ${e}`);
+      toast(`Error updating section: ${e}`);
     }
   };
 

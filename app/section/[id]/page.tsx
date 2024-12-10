@@ -10,7 +10,10 @@ import { NoteProps } from "@/types/note";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import Searchbox from "@/components/Searchbox"; // Import Searchbox component
-import { ArrowBigLeft } from "lucide-react";
+import BackButton from "@/components/buttons/BackButton";
+import { NotebookPenIcon, StarIcon } from "lucide-react";
+import { DeckProps } from "@/types/deck";
+import DeckItem from "@/components/items/DeckItem";
 
 const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
   const router = useRouter();
@@ -22,10 +25,10 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
     userId: 0,
   });
   const [notes, setNotes] = useState<NoteProps[]>([]);
-  const [filteredNotes, setFilteredNotes] = useState<NoteProps[]>([]); // Filtered notes state
-  const [isLoading, setLoading] = useState(true);
+  const [decks, setDecks] = useState<DeckProps[]>([]);
+  const [filteredNotes, setFilteredNotes] = useState<NoteProps[]>([]);
+  const [filteredDecks, setFilteredDecks] = useState<DeckProps[]>([]);
   const { id } = use(params);
-  const [message, setMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const fetchNotes = async () => {
@@ -36,10 +39,17 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
       .then((res) => setNotes(res.data))
       .catch((e) => console.log(e));
   };
+  const fetchDecks = async () => {
+    axios
+      .get(`${BASE_URL}/section/${id}/decks`, {
+        withCredentials: true,
+      })
+      .then((res) => setDecks(res.data))
+      .catch((e) => console.log(e));
+  };
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
       try {
         const [userRes, sectionsRes] = await Promise.all([
           axios.get(`${BASE_URL}/user`, { withCredentials: true }),
@@ -48,32 +58,33 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
           }),
         ]);
 
-        axios
-          .get(`${BASE_URL}/section/${id}/note`, {
+        const [noteRes, deckRes] = await Promise.all([
+          axios.get(`${BASE_URL}/section/${id}/note`, {
             withCredentials: true,
-          })
-          .then((res) => setNotes(res.data))
-          .catch((e) => console.log(e));
+          }),
+          axios.get(`${BASE_URL}/section/${id}/decks`, {
+            withCredentials: true,
+          }),
+        ]);
 
         setUser(userRes.data);
         setSection(sectionsRes.data);
-        if (notes.length === 0) {
-          setMessage("No notes");
-        } else {
-          setMessage("");
-        }
+        setNotes(noteRes.data);
+        setDecks(deckRes.data);
       } catch (error) {
         console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
       }
     };
+
     fetchData();
-  }, [id, notes.length]);
+  }, [id]);
+
+  console.log("User", user?.name);
 
   useEffect(() => {
     if (searchQuery === "") {
       setFilteredNotes(notes);
+      setFilteredDecks(decks);
     } else {
       setFilteredNotes(
         notes.filter(
@@ -82,9 +93,16 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
             note.content.toLowerCase().includes(searchQuery.toLowerCase())
         )
       );
-    }
-  }, [searchQuery, notes]);
 
+      setFilteredDecks(
+        decks.filter(
+          (deck) =>
+            deck.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            deck.description.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
+    }
+  }, [searchQuery, notes, decks]);
   return (
     <div className="ml-[20px] mr-[20px] sm:ml-[30px] sm:mr-[30px] md:ml-[100px] md:mr-[100px] lg:ml-[200px] lg:mr-[200px] xl:ml-[300px] xl:mr-[300px]">
       <div className="space-y-3">
@@ -94,24 +112,29 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
 
       <div className="mt-3">
         <div className="flex justify-between">
-          <Button
-            onClick={() => {
-              router.push("/");
-            }}
-          >
-            <ArrowBigLeft />
-          </Button>
-          <Button onClick={() => router.push(`/section/${section.id}/add`)}>
-            Add Note
-          </Button>
+          <BackButton url={"/"} />
+
+          <div className="space-x-5">
+            <Button
+              className="bg-yellow-300"
+              onClick={() => router.push(`/section/${section.id}/decks/add`)}
+            >
+              <StarIcon />
+              Add Deck
+            </Button>
+
+            <Button onClick={() => router.push(`/section/${section.id}/add`)}>
+              <NotebookPenIcon />
+              Add Note
+            </Button>
+          </div>
         </div>
 
         <div className="mt-4">
           <Searchbox onSearch={setSearchQuery} />
         </div>
-
+        <h1 className="heading mt-3">Notes</h1>
         {filteredNotes.length === 0 && <p>No notes found</p>}
-
         {filteredNotes.map((note, id: number) => (
           <NoteItem
             key={id}
@@ -120,8 +143,18 @@ const SectionDetail = ({ params }: { params: Promise<{ id: string }> }) => {
             refreshNote={fetchNotes}
           />
         ))}
+
+        <h1 className="heading">Decks</h1>
+        {filteredDecks.length === 0 && <p>No decks found</p>}
+        {filteredDecks.map((deck, id) => (
+          <DeckItem
+            key={id}
+            deck={deck}
+            id={section.id}
+            refreshDeck={fetchDecks}
+          />
+        ))}
       </div>
-      {message}
     </div>
   );
 };

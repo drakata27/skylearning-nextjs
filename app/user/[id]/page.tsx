@@ -8,6 +8,13 @@ import { SectionProps } from "@/types/section";
 import { UserProps } from "@/types/user";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const Profile = () => {
   const [user, setUser] = useState<UserProps>({
@@ -56,14 +63,21 @@ const Profile = () => {
       <h1 className="heading">Profile</h1>
       {isLoading ? <SkeletonCard /> : <UserInfo user={user!} />}
       <h1 className="heading">Recent Sections</h1>
-      {sections.map((section, id: number) => (
-        <SectionItem
-          key={id}
-          section={section}
-          user={user}
-          refreshSection={fetchSections}
-        />
-      ))}
+      <Carousel>
+        <CarouselContent>
+          {sections.map((section, id: number) => (
+            <CarouselItem key={id}>
+              <SectionItem
+                section={section}
+                user={user}
+                refreshSection={fetchSections}
+              />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
     </div>
   );
 };
