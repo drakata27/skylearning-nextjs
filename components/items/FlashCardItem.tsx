@@ -11,13 +11,20 @@ import {
 import { Button } from "../ui/button";
 import { FlashCardProps } from "@/types/flashCard";
 import DeleteButton from "../buttons/DeleteButton";
+import axios from "axios";
+import BASE_URL from "@/lib/config";
+import { toast } from "sonner";
 
 const FlashCardItem = ({
   card,
   refreshCards,
+  id,
+  deckId,
 }: {
   card: FlashCardProps;
   refreshCards: () => Promise<void>;
+  id: number;
+  deckId: string;
 }) => {
   const [isAnswerVisible, setAnswerVisible] = useState(false);
 
@@ -25,7 +32,21 @@ const FlashCardItem = ({
     setAnswerVisible((prev) => !prev);
   };
 
-  const handleDelete = () => console.log("Delete");
+  const deleteCard = async () => {
+    axios.delete(
+      `${BASE_URL}/section/${id}/decks/${deckId}/flashcards/${card.cardId}`,
+      { withCredentials: true }
+    );
+  };
+
+  const handleDelete = () => {
+    const confirmed = window.confirm(`Delete card ${card.question}?`);
+    if (confirmed) {
+      deleteCard();
+      toast("Card deleted successfully!");
+      refreshCards();
+    }
+  };
 
   return (
     <div

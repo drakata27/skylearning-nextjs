@@ -73,17 +73,26 @@ const DeckDetails = ({
         />
       </div>
       <div className="flex justify-center mb-[200px]">
-        <Carousel>
-          <CarouselContent>
-            {flashCards.map((card, id) => (
-              <CarouselItem key={id}>
-                <FlashCardItem card={card} refreshCards={refreshCards} />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
+        {flashCards.length > 0 ? (
+          <Carousel>
+            <CarouselContent>
+              {flashCards.map((card, id) => (
+                <CarouselItem key={id}>
+                  <FlashCardItem
+                    card={card}
+                    refreshCards={refreshCards}
+                    id={id}
+                    deckId={deckId}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
+        ) : (
+          <div>Start adding flash cards!</div>
+        )}
       </div>
     </div>
   );
