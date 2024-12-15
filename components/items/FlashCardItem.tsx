@@ -8,12 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "../ui/button";
 import { FlashCardProps } from "@/types/flashCard";
 import DeleteButton from "../buttons/DeleteButton";
 import axios from "axios";
 import BASE_URL from "@/lib/config";
 import { toast } from "sonner";
+import Popup from "../Popup";
 
 const FlashCardItem = ({
   card,
@@ -63,7 +63,15 @@ const FlashCardItem = ({
           )}
         </CardHeader>
         <CardFooter className="space-x-3">
-          <Button>Edit</Button>
+          <Popup
+            cardId={card.cardId}
+            id={String(id)}
+            deckId={deckId}
+            isEditing={true}
+            btnTitle="Edit"
+            refreshCards={refreshCards}
+            url={`${BASE_URL}/section/${id}/decks/${deckId}/flashcards/${card.cardId}/edit`}
+          />
 
           <DeleteButton handleOnClick={handleDelete} />
         </CardFooter>

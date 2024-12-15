@@ -1,6 +1,5 @@
 "use client";
 
-import SectionItem from "@/components/SectionItem";
 import { SkeletonCard } from "@/components/SkeletonCard";
 import UserInfo from "@/components/UserInfo";
 import BASE_URL from "@/lib/config";
@@ -8,13 +7,8 @@ import { SectionProps } from "@/types/section";
 import { UserProps } from "@/types/user";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import RecentSections from "@/components/RecentSections";
+import { ItemData } from "@/components/chartData/ItemData";
 
 const Profile = () => {
   const [user, setUser] = useState<UserProps>({
@@ -62,22 +56,24 @@ const Profile = () => {
     <div className="ml-[20px] mr-[20px] sm:ml-[30px] sm:mr-[30px] md:ml-[100px] md:mr-[100px] lg:ml-[200px] lg:mr-[200px] xl:ml-[300px] xl:mr-[300px]">
       <h1 className="heading">Profile</h1>
       {isLoading ? <SkeletonCard /> : <UserInfo user={user!} />}
-      <h1 className="heading">Recent Sections</h1>
-      <Carousel>
-        <CarouselContent>
-          {sections.map((section, id: number) => (
-            <CarouselItem key={id}>
-              <SectionItem
-                section={section}
-                user={user}
-                refreshSection={fetchSections}
-              />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
+      <div>
+        <h1 className="heading">Recent Sections</h1>
+        <RecentSections
+          fetchSections={fetchSections}
+          sections={sections}
+          user={user}
+        />
+      </div>
+
+      <div>
+        <h1 className="heading">My Items</h1>
+        <ItemData
+          cardsCount={20}
+          decksCount={8}
+          sectionCount={3}
+          notesCount={4}
+        />
+      </div>
     </div>
   );
 };

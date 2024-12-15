@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Dialog,
@@ -11,14 +11,27 @@ import { Button } from "./ui/button";
 import { FlashCardProps } from "@/types/flashCard";
 import axios from "axios";
 import { toast } from "sonner";
+import BASE_URL from "@/lib/config";
 
 interface PopupProps {
+  id?: string;
+  deckId?: string;
+  cardId?: number;
   btnTitle: string;
   url: string;
   refreshCards: () => Promise<void>;
+  isEditing: boolean;
 }
 
-const Popup = ({ btnTitle, url, refreshCards }: PopupProps) => {
+const Popup = ({
+  btnTitle,
+  url,
+  refreshCards,
+  isEditing,
+  id,
+  deckId,
+  cardId,
+}: PopupProps) => {
   const [flashCard, setFlashCard] = useState<FlashCardProps>({
     question: "",
     answer: "",
@@ -26,6 +39,25 @@ const Popup = ({ btnTitle, url, refreshCards }: PopupProps) => {
     cardId: 0,
   });
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchFlashCard = async () => {
+      if (isEditing) {
+        try {
+          const noteRes = await axios.get(
+            `${BASE_URL}/section/${id}/decks/${deckId}/flashcards/${cardId}`,
+            {
+              withCredentials: true,
+            }
+          );
+          setFlashCard(noteRes.data);
+        } catch (error) {
+          console.error("Error fetching ntoe data:", error);
+        }
+      }
+    };
+    fetchFlashCard();
+  }, [id, deckId, cardId, isEditing]);
 
   const createFlashCard = async () => {
     const flashCardData = {
@@ -43,6 +75,24 @@ const Popup = ({ btnTitle, url, refreshCards }: PopupProps) => {
     }
   };
 
+  const updateFlashCard = async () => {
+    const flashcardData = {
+      question: flashCard.question,
+      answer: flashCard.answer,
+    };
+    try {
+      axios.put(
+        `${BASE_URL}/section/${id}/decks/${deckId}/flashcards/${cardId}`,
+        flashcardData,
+        { withCredentials: true }
+      );
+      toast("Flashcard updated successfully");
+      refreshCards();
+    } catch (e) {
+      console.log("Error updating flashcard", e);
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFlashCard({ ...flashCard, [name]: value });
@@ -54,7 +104,11 @@ const Popup = ({ btnTitle, url, refreshCards }: PopupProps) => {
     if (flashCard.question.length === 0 && flashCard.answer.length === 0) {
       toast("Flash Card question or answer is too short");
     } else {
-      await createFlashCard();
+      if (isEditing) {
+        await updateFlashCard();
+      } else {
+        await createFlashCard();
+      }
     }
   };
 

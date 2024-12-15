@@ -67,6 +67,9 @@ const DeckDetails = ({
       <div className="flex justify-between mt-5">
         <BackButton url={`/section/${id}`} />
         <Popup
+          isEditing={false}
+          id={id}
+          deckId={deckId}
           refreshCards={refreshCards}
           btnTitle="Add"
           url={`${BASE_URL}/section/${id}/decks/${deckId}/flashcards`}
