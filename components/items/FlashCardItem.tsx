@@ -33,16 +33,16 @@ const FlashCardItem = ({
   };
 
   const deleteCard = async () => {
-    axios.delete(
+    await axios.delete(
       `${BASE_URL}/section/${id}/decks/${deckId}/flashcards/${card.cardId}`,
       { withCredentials: true }
     );
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     const confirmed = window.confirm(`Delete card ${card.question}?`);
     if (confirmed) {
-      deleteCard();
+      await deleteCard();
       toast("Card deleted successfully!");
       refreshCards();
     }
@@ -53,7 +53,7 @@ const FlashCardItem = ({
       className="flex justify-center"
       onClick={() => toggleAnswerVisibility()}
     >
-      <Card className="justify-center mt-3 p-2 cursor-pointer w-[80%] h-[200%]">
+      <Card className="justify-center mt-3 p-2 cursor-pointer ">
         <CardHeader>
           <CardTitle>{card.question}</CardTitle>
           {isAnswerVisible ? (

@@ -65,10 +65,10 @@ const Popup = ({
       answer: flashCard?.answer as string,
     };
     try {
-      axios.post(url, flashCardData, { withCredentials: true });
+      await axios.post(url, flashCardData, { withCredentials: true });
       toast("Flash Card has been created.");
       setIsOpen(false);
-      window.location.reload();
+      refreshCards();
     } catch (e) {
       console.log(`Error creating flash card: ${e}`);
       toast(`Error creating flash card: ${e}`);
@@ -81,11 +81,12 @@ const Popup = ({
       answer: flashCard.answer,
     };
     try {
-      axios.put(
+      await axios.put(
         `${BASE_URL}/section/${id}/decks/${deckId}/flashcards/${cardId}`,
         flashcardData,
         { withCredentials: true }
       );
+      setIsOpen(false);
       toast("Flashcard updated successfully");
       refreshCards();
     } catch (e) {
