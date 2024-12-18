@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import Footer from "@/components/Footer";
+// import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { Toaster } from "sonner";
 
@@ -40,7 +40,7 @@ export default function RootLayout({
         >
           <Navbar />
           {children}
-          <Footer />
+          {/* <Footer /> */}
           <Toaster />
         </ThemeProvider>
       </body>

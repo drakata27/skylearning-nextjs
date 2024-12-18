@@ -67,23 +67,35 @@ const DeckDetails = ({
       <div className="flex justify-between mt-5">
         <BackButton url={`/section/${id}`} />
         <Popup
+          isEditing={false}
+          id={id}
+          deckId={deckId}
           refreshCards={refreshCards}
           btnTitle="Add"
           url={`${BASE_URL}/section/${id}/decks/${deckId}/flashcards`}
         />
       </div>
       <div className="flex justify-center mb-[200px]">
-        <Carousel>
-          <CarouselContent>
-            {flashCards.map((card, id) => (
-              <CarouselItem key={id}>
-                <FlashCardItem card={card} refreshCards={refreshCards} />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
+        {flashCards.length > 0 ? (
+          <Carousel>
+            <CarouselContent>
+              {flashCards.map((card, id) => (
+                <CarouselItem key={id}>
+                  <FlashCardItem
+                    card={card}
+                    refreshCards={refreshCards}
+                    id={id}
+                    deckId={deckId}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
+        ) : (
+          <div>Start adding flash cards!</div>
+        )}
       </div>
     </div>
   );
