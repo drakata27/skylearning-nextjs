@@ -8,7 +8,7 @@ import { UserProps } from "@/types/user";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import RecentSections from "@/components/RecentSections";
-import { ItemData } from "@/components/chartData/ItemData";
+import { PieChartSummary } from "@/components/chartData/PieChartSummary";
 
 const Profile = () => {
   const [user, setUser] = useState<UserProps>({
@@ -57,7 +57,7 @@ const Profile = () => {
       <h1 className="heading">Profile</h1>
       {isLoading ? <SkeletonCard /> : <UserInfo user={user!} />}
       <div>
-        <h1 className="heading">Recent Sections</h1>
+        <h1 className="heading">Summary by Section</h1>
         <RecentSections
           fetchSections={fetchSections}
           sections={sections}
@@ -65,14 +65,9 @@ const Profile = () => {
         />
       </div>
 
-      <div>
-        <h1 className="heading">My Items</h1>
-        <ItemData
-          cardsCount={20}
-          decksCount={8}
-          sectionCount={3}
-          notesCount={4}
-        />
+      <div className="mb-5 space-y-4">
+        <h1 className="heading">Summary by item</h1>
+        <PieChartSummary sectionsCount={sections.length} />
       </div>
     </div>
   );

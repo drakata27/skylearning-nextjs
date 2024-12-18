@@ -59,7 +59,7 @@ const FlashCardItem = ({
           {isAnswerVisible ? (
             <CardDescription>{card.answer}</CardDescription>
           ) : (
-            <p className="text-gray-500">Reveal Answer</p>
+            <p className="text-gray-500">👉 Reveal Answer</p>
           )}
         </CardHeader>
         <CardFooter className="space-x-3">

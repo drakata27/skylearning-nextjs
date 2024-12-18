@@ -9,6 +9,7 @@ import {
 import SectionItem from "./SectionItem";
 import { UserProps } from "@/types/user";
 import { SectionProps } from "@/types/section";
+import { SectionSummary } from "./chartData/SectionSummary";
 
 interface RecentSectionsProps {
   fetchSections: () => void;
@@ -30,6 +31,11 @@ const RecentSections = ({
               section={section}
               user={user}
               refreshSection={fetchSections}
+            />
+            <h1 className="heading mb-4">Summary for {section.title}</h1>
+            <SectionSummary
+              notesCount={section.notes!.length}
+              decksCount={section.decks!.length}
             />
           </CarouselItem>
         ))}

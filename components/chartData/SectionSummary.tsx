@@ -4,24 +4,18 @@ import { Bar, BarChart, CartesianGrid, LabelList } from "recharts";
 
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 
-interface ItemDataProps {
-  sectionCount: number;
+interface SectionSummaryProps {
   notesCount: number;
   decksCount: number;
-  cardsCount: number;
 }
 
-export function ItemData({
-  sectionCount,
+export function SectionSummary({
   notesCount,
   decksCount,
-  cardsCount,
-}: ItemDataProps) {
+}: SectionSummaryProps) {
   const chartData = [
-    { item: "Sections", count: sectionCount },
     { item: "Notes", count: notesCount },
     { item: "Decks", count: decksCount },
-    { item: "Flashcards", count: cardsCount },
   ];
 
   const chartConfig = {
@@ -39,7 +33,7 @@ export function ItemData({
       <BarChart
         data={chartData}
         barSize={30}
-        margin={{ top: 20, right: 30, bottom: 40, left: 20 }} // Add margins
+        margin={{ top: 20, right: 30, bottom: 40, left: 20 }}
       >
         <CartesianGrid vertical={false} />
         <Bar dataKey="count" fill={chartConfig.count.color} radius={3}>
