@@ -18,6 +18,11 @@ const Profile = () => {
     name: "",
   });
   const [sections, setSections] = useState<SectionProps[]>([]);
+  const [summary, setSummary] = useState<SummaryProps>({
+    sectionsCount: 0,
+    notesCount: 0,
+    decksCount: 0,
+  });
 
   const [isLoading, setLoading] = useState(true);
 
@@ -31,6 +36,11 @@ const Profile = () => {
             withCredentials: true,
           }),
         ]);
+
+        axios
+          .get(`${BASE_URL}/summary`, { withCredentials: true })
+          .then((res) => setSummary(res.data))
+          .catch((e) => console.log(e));
 
         setUser(userRes.data);
         setSections(sectionsRes.data);
@@ -66,8 +76,12 @@ const Profile = () => {
       </div>
 
       <div className="mb-5 space-y-4">
-        <h1 className="heading">Summary by item</h1>
-        <PieChartSummary sectionsCount={sections.length} />
+        <h1 className="heading">Summary</h1>
+        <PieChartSummary
+          sectionsCount={summary.sectionsCount}
+          notesCount={summary.sectionsCount}
+          decksCount={summary.decksCount}
+        />
       </div>
     </div>
   );

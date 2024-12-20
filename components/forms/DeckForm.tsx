@@ -13,12 +13,15 @@ const DeckForm = ({
   isEditing = false,
   id,
   deckId,
+  userId,
 }: {
   isEditing: boolean;
   id: string;
   deckId?: string;
+  userId: number;
 }) => {
   const router = useRouter();
+
   const [deck, setDeck] = useState<DeckProps>({
     deckId: 0,
     name: "",
@@ -51,6 +54,7 @@ const DeckForm = ({
       name: deck.name as string,
       description: deck.description as string,
       section_id: id,
+      userId: userId,
     };
 
     try {

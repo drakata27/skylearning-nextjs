@@ -15,10 +15,12 @@ const NoteForm = ({
   isEditing = false,
   id,
   noteid,
+  userId,
 }: {
   isEditing: boolean;
   id: string;
   noteid?: string;
+  userId: number;
 }) => {
   const router = useRouter();
   const { theme } = useTheme();
@@ -54,6 +56,7 @@ const NoteForm = ({
       title: note.title as string,
       content: note.content as string,
       section_id: id,
+      userId: userId,
     };
 
     try {

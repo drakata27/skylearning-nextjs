@@ -13,13 +13,19 @@ import {
 
 interface PieChartSummaryProps {
   sectionsCount: number;
+  notesCount: number;
+  decksCount: number;
 }
 
-export function PieChartSummary({ sectionsCount }: PieChartSummaryProps) {
+export function PieChartSummary({
+  sectionsCount,
+  notesCount,
+  decksCount,
+}: PieChartSummaryProps) {
   const chartData = [
     { item: "sections", count: sectionsCount, fill: "var(--color-chrome)" },
-    { item: "notes", count: 0, fill: "var(--color-safari)" },
-    { item: "decks", count: 0, fill: "var(--color-firefox)" },
+    { item: "notes", count: notesCount, fill: "var(--color-safari)" },
+    { item: "decks", count: decksCount, fill: "var(--color-firefox)" },
     { item: "cards", count: 0, fill: "var(--color-edge)" },
   ];
 
@@ -83,7 +89,7 @@ export function PieChartSummary({ sectionsCount }: PieChartSummaryProps) {
                           className="fill-foreground text-3xl font-bold"
                         >
                           {" "}
-                          {sectionsCount}
+                          {sectionsCount + notesCount + decksCount}
                         </tspan>
                         <tspan
                           x={viewBox.cx}

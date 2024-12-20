@@ -7,6 +7,7 @@ import GoogleIcon from "./GoogleIcon";
 import { UserProps } from "@/types/user";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { Card, CardContent, CardHeader } from "./ui/card";
 
 const Oauth2Login = () => {
   const [user, setUser] = useState<UserProps>();
@@ -27,19 +28,25 @@ const Oauth2Login = () => {
   if (user === undefined) return <div>Loading...</div>;
 
   return (
-    <div className="rounded-xl">
-      <h1 className="heading">Please login</h1>
-      <div className="flex justify-start mt-4 space-x-5">
-        <Github
-          className="hover:cursor-pointer"
-          onClick={() =>
-            (window.location.href = `${BASE_URL}/oauth2/authorization/github`)
-          }
-        />
+    <Card>
+      <CardHeader>
+        <h1 className="heading">Please login</h1>
+      </CardHeader>
+      <CardContent className="flex justify-center space-x-5">
+        <CardContent>
+          <Github
+            className="hover:cursor-pointer"
+            onClick={() =>
+              (window.location.href = `${BASE_URL}/oauth2/authorization/github`)
+            }
+          />
+        </CardContent>
 
-        <GoogleIcon />
-      </div>
-    </div>
+        <CardContent>
+          <GoogleIcon />
+        </CardContent>
+      </CardContent>
+    </Card>
   );
 };
 
