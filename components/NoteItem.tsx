@@ -12,10 +12,12 @@ const NoteItem = ({
   note,
   refreshNote,
   id,
+  isRecent,
 }: {
   note: NoteProps;
   refreshNote: () => void;
-  id: number;
+  id?: number;
+  isRecent: boolean;
 }) => {
   const router = useRouter();
 
@@ -44,7 +46,9 @@ const NoteItem = ({
     if (isDeleting) {
       handleDelete();
     } else {
-      router.push(`/section/${id}/note/${note.noteId}`);
+      if (!isRecent) {
+        router.push(`/section/${id}/note/${note.noteId}`);
+      }
     }
   }
 
@@ -54,10 +58,14 @@ const NoteItem = ({
         <CardHeader>
           <div className="flex justify-between">
             <CardTitle>{note.title}</CardTitle>
-            <div className="space-x-4">
-              <EditButton url={`/section/${id}/note/${note.noteId}/edit`} />
-              <DeleteButton handleOnClick={handleOnClick} />
-            </div>
+            {!isRecent ? (
+              <div className="space-x-4">
+                <EditButton url={`/section/${id}/note/${note.noteId}/edit`} />
+                <DeleteButton handleOnClick={handleOnClick} />
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         </CardHeader>
         <CardFooter className="space-x-3">
