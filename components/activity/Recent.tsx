@@ -33,7 +33,7 @@ const Recent = () => {
 
   return (
     <div>
-      <h1>Recent Notes</h1>
+      <h1 className="heading">Recent Notes</h1>
       <Carousel>
         <CarouselContent>
           {notes?.map((note, id: number) => (

@@ -9,6 +9,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import RecentSections from "@/components/RecentSections";
 import { PieChartSummary } from "@/components/chartData/PieChartSummary";
+import Recent from "@/components/activity/Recent";
 
 const Profile = () => {
   const [user, setUser] = useState<UserProps>({
@@ -83,6 +84,8 @@ const Profile = () => {
           decksCount={summary.decksCount}
         />
       </div>
+
+      <Recent />
     </div>
   );
 };

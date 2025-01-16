@@ -22,7 +22,10 @@ const Oauth2Login = () => {
           router.push("/");
         }
       })
-      .catch((e) => console.log("Error fetching user", e));
+      .catch((e) => {
+        console.log("Error fetching user", e);
+        return;
+      });
   }, [router, user]);
 
   if (user === undefined) return <div>Loading...</div>;

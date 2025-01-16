@@ -9,7 +9,7 @@ const Footer = async () => {
         {/* Footer Bottom Section */}
         <div className="mt-8 border-t border-gray-700 pt-4 text-center text-sm">
           <p>
-            &copy; {new Date().getFullYear()} Aleksandar Drakaliyski. All rights
+            &copy; 2024 - {new Date().getFullYear()} Skylearning. All rights
             reserved.
           </p>
         </div>

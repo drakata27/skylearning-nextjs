@@ -8,7 +8,6 @@ import { SkeletonCard } from "@/components/SkeletonCard";
 import { SectionProps } from "@/types/section";
 import Searchbox from "@/components/Searchbox";
 import Oauth2Login from "@/components/Oauth2Login";
-import Recent from "@/components/activity/Recent";
 
 const HomePage = () => {
   const [user, setUser] = useState<UserProps>();
@@ -62,7 +61,6 @@ const HomePage = () => {
   return (
     <div className="heading space-y-3">
       <h1>Home</h1>
-      <Recent />
       <Searchbox onSearch={setSearchQuery} />
       {isLoading ? (
         <>
