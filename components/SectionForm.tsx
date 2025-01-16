@@ -128,13 +128,13 @@ const SectionForm = ({
         name="title"
         value={section.title}
         onChange={handleInputChange}
-        placeholder="Add title..."
+        placeholder="Add title... (ex. Don Quixote)"
       />
       <Input
         name="subtitle"
         value={section.subtitle}
         onChange={handleInputChange}
-        placeholder="Add subtitle..."
+        placeholder="Add subtitle... (ex. Miguel de Cervantes)"
       />
 
       <Button type="submit">
